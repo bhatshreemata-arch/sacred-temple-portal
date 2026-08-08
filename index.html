@@ -1,111 +1,155 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sacred Temple — Home</title>
-  <meta name="description" content="Sacred Temple — history, darshan, events, donations, services and booking portal." />
-  <link rel="stylesheet" href="styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sacred Temple — Welcome</title>
+<link rel="stylesheet" href="styles.css">
+
+<style>
+/* Fullscreen Carousel */
+.hero-carousel {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.hero-slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1s ease;
+  cursor: pointer;
+}
+
+.hero-slide.active {
+  opacity: 1;
+}
+
+.hero-overlay {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: white;
+  text-shadow: 0 2px 10px black;
+}
+
+.hero-overlay h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.hero-btn {
+  padding: 12px 28px;
+  background: rgba(255,255,255,0.2);
+  border: 2px solid #fff;
+  color: white;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+.hero-btn:hover {
+  background: rgba(255,255,255,0.4);
+}
+
+/* Arrows */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 3rem;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  text-shadow: 0 2px 10px black;
+  user-select: none;
+}
+.arrow:hover {
+  color: #ffe;
+}
+.arrow-left { left: 20px; }
+.arrow-right { right: 20px; }
+
+/* Dots */
+.carousel-dots {
+  position: absolute;
+  bottom: 30px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.dot {
+  width: 14px;
+  height: 14px;
+  background: white;
+  opacity: 0.4;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.dot.active { opacity: 1; }
+</style>
+
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="index.html">✦ Sacred Temple</a>
-      <button class="nav-toggle" aria-expanded="false" aria-controls="mainNav">☰</button>
-      <nav id="mainNav" class="main-nav" aria-label="Primary navigation">
-        <ul>
-          <li><a href="index.html" aria-current="page">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="visit.html">Visit / Booking</a></li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="gallery.html">Gallery</a></li>
-          <li><a href="events.html">Events</a></li>
-          <li><a href="donations.html">Donate</a></li>
-          <li><a href="faq.html">FAQ</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="admin.html" class="admin-link">Admin</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
 
-  <main>
-    <section class="hero">
-      <div class="container hero-inner">
-        <h1>Welcome to the Sacred Temple</h1>
-        <p class="lead">A place of peace, tradition and community. Plan your visit, donate, or explore our services.</p>
+<!-- ──────────────── FULLSCREEN CAROUSEL ──────────────── -->
+<div class="hero-carousel">
 
-        <div class="hero-actions">
-          <a class="btn" href="visit.html">Book a Visit</a>
-          <a class="btn outline" href="events.html">Upcoming Events</a>
-          <a class="btn outline" href="donations.html">Donate</a>
-        </div>
-      </div>
-    </section>
+  <!-- Slides (replace with your own images) -->
+  <div class="hero-slide active" style="background-image:url('https://instaastro.com/blog/wp-content/uploads/2022/04/feature-image-kashi-vishwanath.jpg');" onclick="goToSite()"></div>
+  <div class="hero-slide" style="background-image:url('https://i.redd.it/jsxfnjcn49e61.jpg');" onclick="goToSite()"></div>
+  <div class="hero-slide" style="background-image:url('https://irisholidays.com/keralatourism/wp-content/uploads/2023/03/madurai-meenakshi-temple-view-1024x819.jpg');" onclick="goToSite()"></div>
 
-    <section class="container highlights">
-      <div class="card">
-        <h3>Live Darshan</h3>
-        <p>Watch the live temple feed and stay connected with rituals. (Embed supported in admin)</p>
-        <a class="small-link" href="map.html">View Live & Map</a>
-      </div>
+  <!-- Overlay Text -->
+  <div class="hero-overlay">
+    <h1>Welcome to Sacred Temple</h1>
+    <button class="hero-btn" onclick="goToSite()">Enter Website</button>
+  </div>
 
-      <div class="card">
-        <h3>Services & Seva</h3>
-        <p>Book archana, abhishekam, and other services online with slot booking.</p>
-        <a class="small-link" href="services.html">Explore Services</a>
-      </div>
+  <!-- Arrows -->
+  <div class="arrow arrow-left" onclick="prevSlide()">&#10094;</div>
+  <div class="arrow arrow-right" onclick="nextSlide()">&#10095;</div>
 
-      <div class="card">
-        <h3>Events & Festivals</h3>
-        <p>See festival countdowns, event schedules and special ceremonies.</p>
-        <a class="small-link" href="events.html">View Events</a>
-      </div>
-    </section>
+  <!-- Dots -->
+  <div class="carousel-dots">
+    <div class="dot active" onclick="setSlide(0)"></div>
+    <div class="dot" onclick="setSlide(1)"></div>
+    <div class="dot" onclick="setSlide(2)"></div>
+  </div>
+</div>
 
-    <section class="container features-row">
-      <div class="feature">
-        <strong>Current Time</strong>
-        <div id="liveClock">--:--:--</div>
-      </div>
-      <div class="feature">
-        <strong>Visitor (this browser)</strong>
-        <div id="visitorCount">0</div>
-      </div>
-      <div class="feature">
-        <strong>Next Festival</strong>
-        <div id="nextFestival">—</div>
-      </div>
-    </section>
+<script>
+// Carousel Logic
+let currentHero = 0;
+const slides = document.querySelectorAll(".hero-slide");
+const dots = document.querySelectorAll(".dot");
 
-    <section class="container search-strip">
-      <input id="siteSearch" placeholder="Search events, news, services, gallery..." aria-label="Site search">
-      <button id="searchBtn" class="btn">Search</button>
-    </section>
+function showSlide(n) {
+  slides.forEach((s,i)=> s.classList.toggle("active", i===n));
+  dots.forEach((d,i)=> d.classList.toggle("active", i===n));
+  currentHero = n;
+}
 
-    <section class="container preview-section">
-      <h2>Latest Announcements</h2>
-      <div id="announcements" class="announcements">
-        <!-- populated by scripts.js -->
-      </div>
-    </section>
+function nextSlide() { showSlide((currentHero + 1) % slides.length); }
+function prevSlide() { showSlide((currentHero - 1 + slides.length) % slides.length); }
+function setSlide(n) { showSlide(n); }
 
-  </main>
+// autoplay every 4 seconds
+setInterval(nextSlide, 4000);
 
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <div>
-        <p>&copy; <span id="year"></span> Sacred Temple</p>
-        <p><small>Address: Temple Road, Your City • Phone: +91 12345 67890</small></p>
-      </div>
-      <nav aria-label="Footer">
-        <a href="privacy.html">Privacy</a> • <a href="terms.html">Terms</a>
-      </nav>
-    </div>
-  </footer>
+// Enter website
+function goToSite() {
+  window.location.href = "index.html";
+}
+</script>
 
-  <div id="chatbotRoot"></div>
-
-  <script src="scripts.js"></script>
 </body>
 </html>
