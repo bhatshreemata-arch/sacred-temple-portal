@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Services & Seva — Sacred Temple</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">✦ Sacred Temple</a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="mainNav">☰</button>
+      <nav id="mainNav" class="main-nav">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="services.html" aria-current="page">Services</a></li>
+          <li><a href="visit.html">Visit</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Temple Services & Seva</h1>
+
+    <div class="services-grid" id="servicesGrid">
+      <!-- will be populated by scripts.js with demo services -->
+    </div>
+
+    <section class="container service-booking">
+      <h2>Book a Service Slot</h2>
+
+      <form id="serviceBookingForm" class="form-card" novalidate>
+        <label for="svc_name">Name</label>
+        <input id="svc_name" required />
+
+        <label for="svc_email">Email</label>
+        <input id="svc_email" type="email" required />
+
+        <label for="svc_service">Select Service</label>
+        <select id="svc_service" required>
+          <!-- options filled by scripts.js -->
+        </select>
+
+        <label for="svc_date">Date</label>
+        <input id="svc_date" type="date" required />
+
+        <label for="svc_slot">Slot</label>
+        <select id="svc_slot" required>
+          <option>06:00 - 06:30</option>
+          <option>06:30 - 07:00</option>
+          <option>07:00 - 07:30</option>
+          <option>17:00 - 17:30</option>
+          <option>17:30 - 18:00</option>
+        </select>
+
+        <div class="form-actions">
+          <button type="submit" class="btn">Book Service</button>
+        </div>
+
+        <div id="svcMessage" class="form-message" role="status" aria-live="polite"></div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer container">
+    <p>&copy; Sacred Temple</p>
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

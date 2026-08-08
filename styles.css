@@ -1,0 +1,676 @@
+/* ------------------------------
+   ROOT VARIABLES & GLOBAL RESET
+------------------------------ */
+:root {
+  --primary:#0e8bb6;
+  --secondary:#7ab6d3;
+  --accent:#9a796e;
+  --bg:#ffffff;
+  --text:#333;
+  --muted:#777;
+  --card-bg:#ffffff;
+  --radius:12px;
+  --shadow:0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* DARK MODE */
+[data-theme="dark"] {
+  --bg:#0b0b0c;
+  --text:#e0e0e0;
+  --muted:#aaaaaa;
+  --card-bg:#151515;
+  --shadow:0 0 0 transparent;
+}
+
+/* RESET */
+* { box-sizing:border-box; margin:0; padding:0; }
+
+/* GLOBAL */
+body {
+  font-family:system-ui, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+}
+
+.container {
+  width:100%;
+  max-width:1200px;
+  margin:auto;
+  padding:1rem;
+}
+
+/* ------------------------------
+   HEADER & NAVIGATION
+------------------------------ */
+.site-header {
+  background:linear-gradient(90deg, var(--primary), var(--secondary));
+  padding:.6rem 0;
+  color:white;
+  position:sticky; top:0; z-index:2000;
+}
+
+.header-inner { 
+  display:flex; align-items:center; justify-content:space-between;
+}
+
+.brand {
+  font-size:1.3rem; font-weight:700; color:white; text-decoration:none;
+}
+
+.nav-toggle {
+  display:none; font-size:1.7rem; color:white; border:none; background:none;
+}
+
+.main-nav ul {
+  display:flex; list-style:none; gap:1rem;
+}
+
+.main-nav a {
+  color:white; text-decoration:none; padding:.4rem;
+  font-size:.95rem; border-radius:6px;
+}
+
+.main-nav a:hover {
+  background:rgba(255,255,255,0.18);
+}
+
+/* MOBILE NAV */
+@media (max-width:780px) {
+  .nav-toggle { display:block; }
+  .main-nav { display:none; width:100%; margin-top:.6rem; }
+  .main-nav.open { display:block; }
+  .main-nav ul { flex-direction:column; gap:.6rem; }
+}
+
+/* ------------------------------
+   HERO SECTION
+------------------------------ */
+.hero {
+  text-align:center;
+  padding:4rem 1rem;
+  background:linear-gradient(180deg, #e8f5ff, #ffffff);
+}
+
+.hero h1 {
+  font-size:2.3rem;
+}
+
+.hero-actions {
+  margin-top:1rem; display:flex; gap:1rem; justify-content:center;
+}
+
+/* BUTTONS */
+.btn {
+  padding:.6rem 1rem; background:var(--accent); border-radius:8px;
+  color:white; text-decoration:none; border:none; cursor:pointer;
+  transition:.2s;
+}
+.btn:hover { opacity:.85; }
+
+.outline {
+  background:transparent; border:1px solid var(--accent); color:var(--accent);
+}
+
+/* ------------------------------
+   FEATURE CARDS
+------------------------------ */
+.highlights, .features-row {
+  display:grid; gap:1rem; margin-top:2rem;
+  grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
+}
+
+.card, .feature {
+  background:var(--card-bg); border-radius:var(--radius);
+  padding:1.2rem; box-shadow:var(--shadow);
+}
+
+.feature strong {
+  display:block; font-size:1.2rem; margin-bottom:.4rem;
+}
+
+/* ------------------------------
+   SEARCH BAR
+------------------------------ */
+.search-strip {
+  margin-top:2rem; display:flex; gap:1rem;
+}
+
+.search-strip input {
+  flex:1; padding:.6rem; border-radius:8px; border:1px solid #ddd;
+}
+
+/* ------------------------------
+   ANNOUNCEMENTS
+------------------------------ */
+.announcements {
+  background:var(--card-bg); padding:1rem; border-radius:var(--radius);
+  box-shadow:var(--shadow); min-height:80px;
+}
+
+/* ------------------------------
+   IMAGE CAROUSEL (NEW FEATURE)
+------------------------------ */
+
+.carousel {
+  position:relative;
+  overflow:hidden;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  margin-top:2rem;
+}
+
+.carousel-track {
+  display:flex;
+  transition:transform .5s ease;
+}
+
+.carousel-slide {
+  min-width:100%;
+  position:relative;
+}
+
+.carousel-slide img {
+  width:100%; height:350px; object-fit:cover;
+  display:block;
+}
+
+.carousel-btn {
+  position:absolute;
+  top:50%; transform:translateY(-50%);
+  background:rgba(0,0,0,0.45);
+  border:none; color:white;
+  padding:.6rem; border-radius:50%;
+  cursor:pointer; font-size:1.3rem;
+}
+
+.carousel-btn.prev { left:10px; }
+.carousel-btn.next { right:10px; }
+
+.carousel-indicators {
+  position:absolute; bottom:15px;
+  display:flex; gap:.5rem;
+  width:100%; justify-content:center;
+}
+
+.carousel-indicators div {
+  width:12px; height:12px; border-radius:50%;
+  background:white; opacity:.4; cursor:pointer;
+}
+
+.carousel-indicators .active {
+  opacity:1;
+}
+
+/* ------------------------------
+   FORMS
+------------------------------ */
+.form-card {
+  background:var(--card-bg);
+  padding:1rem; border-radius:var(--radius);
+  box-shadow:var(--shadow); margin-top:1rem;
+}
+
+.form-card input, .form-card textarea, .form-card select {
+  width:100%; padding:.6rem; margin-top:.3rem;
+  border:1px solid #ddd; border-radius:8px;
+}
+
+.form-actions {
+  margin-top:.8rem; display:flex; gap:.5rem;
+}
+
+.form-message {
+  margin-top:.6rem; font-weight:600;
+}
+
+/* LIGHTBOX (Gallery) */
+.lightbox {
+  position:fixed; inset:0;
+  background:rgba(0,0,0,0.8);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; visibility:hidden; transition:.3s;
+}
+
+.lightbox.active {
+  opacity:1; visibility:visible;
+}
+
+.lightbox img {
+  max-width:90%; max-height:80%;
+  border-radius:var(--radius);
+}
+
+.lb-close, .lb-next, .lb-prev {
+  position:absolute; background:transparent;
+  border:none; color:white; font-size:2rem; cursor:pointer;
+}
+
+.lb-close { top:20px; right:20px; }
+.lb-prev { left:20px; top:50%; transform:translateY(-50%); }
+.lb-next { right:20px; top:50%; transform:translateY(-50%); }
+
+/* ------------------------------
+   EVENTS GRID
+------------------------------ */
+.events-grid {
+  margin-top:2rem;
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(300px,1fr));
+  gap:1rem;
+}
+
+.event-card {
+  background:var(--card-bg); padding:1rem;
+  border-radius:var(--radius); box-shadow:var(--shadow);
+}
+
+.event-meta {
+  color:var(--muted); font-size:.9rem;
+}
+
+/* ------------------------------
+   COUNTDOWN
+------------------------------ */
+.countdown-box {
+  background:var(--card-bg);
+  padding:1rem; border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  margin-top:1rem; text-align:center;
+}
+
+.countdown-time {
+  font-size:1.4rem; font-weight:700;
+  margin-top:.5rem;
+}
+
+/* ------------------------------
+   GALLERY GRID
+------------------------------ */
+.gallery {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:.7rem;
+}
+
+.gallery img {
+  border-radius:var(--radius);
+  width:100%; height:180px; object-fit:cover; cursor:pointer;
+  transition:.2s;
+}
+
+.gallery img:hover {
+  transform:scale(1.04);
+}
+/* =====================================
+   ADMIN DASHBOARD (Option A — Local)
+===================================== */
+.admin-main h1 { margin:1rem 0; }
+
+.admin-panel {
+  margin-top:2rem;
+}
+
+.admin-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(300px,1fr));
+  gap:1rem;
+}
+
+.admin-card {
+  background:var(--card-bg);
+  padding:1rem;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+
+.admin-card h3 {
+  margin-bottom:.6rem;
+}
+
+.admin-card textarea {
+  width:100%; border-radius:var(--radius);
+  padding:.6rem; border:1px solid #ccc;
+}
+
+#adminBookings, #adminMessages, #adminDonations, #adminStats {
+  font-size:.95rem; max-height:300px;
+  overflow-y:auto; padding-right:.5rem;
+}
+
+.admin-item {
+  background:#f8f8f8;
+  padding:.6rem; border-radius:6px;
+  margin-bottom:.4rem;
+  border-left:4px solid var(--primary);
+}
+
+.admin-item small {
+  color:var(--muted);
+}
+
+/* =====================================
+   CHATBOT (FAQ / Assistant)
+===================================== */
+
+#chatbotRoot {
+  position:fixed; right:20px; bottom:20px;
+  z-index:2000;
+}
+
+.chatbot-launcher {
+  width:60px; height:60px;
+  background:var(--primary);
+  color:white; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 16px rgba(0,0,0,0.3);
+  cursor:pointer; font-size:1.8rem;
+}
+
+.chatbot-window {
+  width:320px; height:420px;
+  background:var(--card-bg);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  position:absolute; bottom:70px; right:0;
+  display:flex; flex-direction:column;
+  overflow:hidden;
+  border:1px solid #ddd;
+}
+
+.chat-header {
+  background:var(--primary);
+  padding:.7rem; color:white;
+  font-weight:600;
+  display:flex; justify-content:space-between;
+  align-items:center;
+}
+
+.chat-messages {
+  flex:1; overflow-y:auto; padding:.6rem;
+}
+
+.chat-msg {
+  padding:.5rem .8rem;
+  margin:.4rem 0;
+  border-radius:10px;
+  max-width:80%;
+}
+
+.chat-msg.bot {
+  background:#eaf6ff;
+  align-self:flex-start;
+}
+
+.chat-msg.user {
+  background:#d4ffe0;
+  align-self:flex-end;
+}
+
+.chat-input-area {
+  display:flex; padding:.4rem; gap:.5rem;
+  border-top:1px solid #ddd;
+}
+
+.chat-input-area input {
+  flex:1; padding:.6rem; border-radius:8px;
+  border:1px solid #ccc;
+}
+
+.chat-input-area button {
+  background:var(--primary); border:none; color:white;
+  padding:.6rem .9rem; border-radius:8px; cursor:pointer;
+}
+
+/* =====================================
+   AUDIO PLAYER
+===================================== */
+.audio-player {
+  background:var(--card-bg);
+  padding:1rem;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+
+.audio-player audio {
+  width:100%; margin-top:.5rem;
+}
+
+.audio-controls {
+  margin-top:.6rem; display:flex; gap:.6rem;
+}
+
+.audio-list {
+  margin-top:1rem;
+  list-style:none; padding:0;
+}
+
+.audio-list li {
+  padding:.5rem; border-radius:8px; cursor:pointer;
+}
+
+.audio-list li:hover {
+  background:#f0f0f0;
+}
+
+.audio-list .active {
+  background:#d2eaff;
+  font-weight:700;
+}
+
+/* =====================================
+   QR TICKET (Booking Page)
+===================================== */
+.ticket-area {
+  margin-top:1rem;
+  background:var(--card-bg);
+  padding:1rem;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+
+.ticket {
+  padding:1rem; border-radius:8px;
+  background:#fff7e0;
+  border:1px dashed #d4a84f;
+}
+
+.ticket h3 {
+  margin-bottom:.5rem;
+}
+
+.ticket small {
+  display:block; margin-top:.4rem; color:#775c19;
+}
+
+.qr-box {
+  margin-top:1rem;
+  display:flex; justify-content:center;
+}
+
+/* =====================================
+   DONATION HISTORY
+===================================== */
+.donation-history {
+  margin-top:2rem;
+}
+
+.donation-entry {
+  background:var(--card-bg);
+  padding:1rem;
+  margin-bottom:.6rem;
+  border-radius:var(--radius);
+  border-left:4px solid var(--primary);
+  box-shadow:var(--shadow);
+}
+
+/* =====================================
+   SERVICES GRID
+===================================== */
+.services-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
+  gap:1rem; margin-top:2rem;
+}
+
+.service-card {
+  background:var(--card-bg);
+  padding:1rem;
+  border-radius:var(--radius);
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+
+.service-card h3 { margin-bottom:.5rem; }
+.service-card p { color:var(--muted); }
+
+/* =====================================
+   MAP PAGE
+===================================== */
+.map-placeholder {
+  margin-top:1rem;
+  background:#f2f2f2;
+  border-radius:var(--radius);
+  overflow:hidden;
+}
+
+.map-legends {
+  margin-top:1rem;
+  display:flex; flex-wrap:wrap; gap:.6rem;
+}
+
+.map-info {
+  margin-top:1rem;
+  padding:1rem;
+  background:var(--card-bg);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+
+/* =====================================
+   RATING SYSTEM (Feedback)
+===================================== */
+.rating-box {
+  display:flex; gap:.4rem;
+}
+
+.star {
+  font-size:1.6rem; cursor:pointer;
+  color:#cccccc;
+}
+
+.star.filled {
+  color:#f5b700;
+}
+
+/* =====================================
+   CAROUSEL RESPONSIVE FIXES
+===================================== */
+@media (max-width:680px) {
+  .carousel-slide img {
+    height:260px;
+  }
+}
+
+/* =====================================
+   UTILITY CLASSES
+===================================== */
+.muted { color:var(--muted); }
+.text-center { text-align:center; }
+.mt-1 { margin-top:1rem; }
+.mt-2 { margin-top:2rem; }
+.hidden { display:none !important; }
+
+/* =====================================
+   FOOTER
+===================================== */
+.site-footer {
+  background:#0a2530;
+  padding:1rem; color:white; margin-top:2rem;
+}
+
+.footer-inner {
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+}
+.ticket-area {
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.ticket-card {
+  background: var(--card-bg, #fff);
+  padding: 1.2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  max-width: 420px;
+  margin: auto;
+  text-align: center;
+}
+
+.ticket-card h3 {
+  margin-top: 0;
+  color: var(--primary, #5b2aff);
+}
+
+.qr-box {
+  margin-top: 1rem;
+}
+
+.qr-box img {
+  width: 180px;
+  height: 180px;
+  margin-bottom: .5rem;
+}
+
+.qr-text {
+  font-size: .85rem;
+  color: #555;
+}
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+}
+
+.gallery img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: transform 0.3s;
+}
+
+.gallery img:hover {
+  transform: scale(1.05);
+}
+
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.lightbox iframe {
+  width: 80%;
+  height: 450px;
+  border: none;
+  border-radius: 10px;
+}
+
+.lb-close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 28px;
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+}

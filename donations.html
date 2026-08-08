@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Donate — Sacred Temple</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">✦ Sacred Temple</a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="mainNav">☰</button>
+      <nav id="mainNav" class="main-nav">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="donations.html" aria-current="page">Donate</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Support the Temple</h1>
+
+    <form id="donationForm" class="form-card" novalidate>
+      <label for="donorName">Full name</label>
+      <input id="donorName" required />
+
+      <label for="donorEmail">Email (for receipt)</label>
+      <input id="donorEmail" type="email" required />
+
+      <label for="donationAmount">Amount (INR)</label>
+      <input id="donationAmount" type="number" min="1" value="500" required />
+
+      <div class="preset-buttons">
+        <button type="button" class="btn preset" data-amount="200">₹200</button>
+        <button type="button" class="btn preset" data-amount="500">₹500</button>
+        <button type="button" class="btn preset" data-amount="1000">₹1000</button>
+        <button type="button" class="btn preset" data-amount="5000">₹5000</button>
+      </div>
+
+      <label for="donationNote">Note (optional)</label>
+      <textarea id="donationNote" rows="3"></textarea>
+
+      <div class="form-actions">
+        <button type="submit" class="btn">Donate (Demo)</button>
+      </div>
+
+      <div id="donationMessage" class="form-message" role="status" aria-live="polite"></div>
+    </form>
+
+    <section class="container donation-history">
+      <h2>Your Donations (This Browser)</h2>
+      <div id="donationHistory">--</div>
+    </section>
+  </main>
+
+  <footer class="site-footer container">
+    <p>&copy; Sacred Temple</p>
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

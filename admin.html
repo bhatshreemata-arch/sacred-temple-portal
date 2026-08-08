@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin — Sacred Temple</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">✦ Sacred Temple (Admin)</a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="mainNav">☰</button>
+    </div>
+  </header>
+
+  <main class="container admin-main">
+    <h1>Admin Dashboard (Demo — Local)</h1>
+
+    <section id="adminLoginSection" class="form-card">
+      <h2>Admin Login (Option A — Local)</h2>
+      <p><strong>Demo credentials:</strong> <code>username: admin</code> | <code>password: temple123</code></p>
+
+      <form id="adminLoginForm" autocomplete="off">
+        <label for="adminUser">Username</label>
+        <input id="adminUser" required />
+        <label for="adminPass">Password</label>
+        <input id="adminPass" type="password" required />
+        <div class="form-actions">
+          <button type="submit" class="btn">Login</button>
+        </div>
+        <div id="adminLoginMessage" class="form-message"></div>
+      </form>
+    </section>
+
+    <section id="adminPanel" class="admin-panel" hidden>
+      <div class="admin-grid">
+        <div class="admin-card">
+          <h3>Bookings</h3>
+          <div id="adminBookings">Loading...</div>
+        </div>
+
+        <div class="admin-card">
+          <h3>Messages</h3>
+          <div id="adminMessages">Loading...</div>
+        </div>
+
+        <div class="admin-card">
+          <h3>Donations</h3>
+          <div id="adminDonations">Loading...</div>
+        </div>
+
+        <div class="admin-card">
+          <h3>Announcements</h3>
+          <textarea id="announcementText" rows="3" placeholder="Write an announcement"></textarea>
+          <div class="form-actions">
+            <button id="saveAnnouncement" class="btn">Save Announcement</button>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h3>Visitor Stats</h3>
+          <div id="adminStats">Loading...</div>
+        </div>
+
+      </div>
+
+      <div style="margin-top:1rem">
+        <button id="adminLogout" class="btn outline">Logout</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer container">
+    <p>&copy; Sacred Temple</p>
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

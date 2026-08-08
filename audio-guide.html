@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Audio Guide — Sacred Temple</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">✦ Sacred Temple</a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="mainNav">☰</button>
+      <nav id="mainNav" class="main-nav">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="audio-guide.html" aria-current="page">Audio Guide</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Audio Guide</h1>
+    <p>Listen to temple stories and explanations of important spots.</p>
+
+    <div class="audio-player" id="audioPlayer">
+      <div id="trackTitle">—</div>
+      <audio id="audioElement" controls preload="none">
+        <source src="audio/guide1.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+
+      <div class="audio-controls">
+        <button id="prevTrack" class="btn outline">Prev</button>
+        <button id="nextTrack" class="btn outline">Next</button>
+      </div>
+
+      <ul id="audioList" class="audio-list">
+        <!-- populated by scripts.js -->
+      </ul>
+    </div>
+  </main>
+
+  <footer class="site-footer container">
+    <p>&copy; Sacred Temple</p>
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

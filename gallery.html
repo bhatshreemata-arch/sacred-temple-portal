@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gallery — Sacred Temple</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+
+    /* HEADER */
+    .site-header {
+      background: linear-gradient(to right, #0d6e8c, #6db3c8);
+      padding: 15px 30px;
+      color: white;
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      color: white;
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .main-nav ul {
+      list-style: none;
+      display: flex;
+      gap: 18px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .main-nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .main-nav a[aria-current="page"] {
+      text-decoration: underline;
+    }
+
+    /* MAIN */
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 30px;
+      background: white;
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    .muted {
+      color: #666;
+    }
+
+    /* GALLERY */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .gallery img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .gallery img:hover {
+      transform: scale(1.05);
+    }
+
+    /* LIGHTBOX */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .lightbox iframe {
+      width: 80%;
+      height: 450px;
+      border-radius: 10px;
+      border: none;
+    }
+
+    .lb-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 30px;
+      color: white;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* FOOTER */
+    .site-footer {
+      background: #0b2c3d;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html">✦ Sacred Temple</a>
+      <nav class="main-nav">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="visit.html">Visit</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="gallery.html" aria-current="page">Gallery</a></li>
+          <li><a href="events.html">Events</a></li>
+          <li><a href="donations.html">Donate</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="container">
+    <h1>Photo & Video Gallery</h1>
+    <p class="muted">Click on a temple image to watch its video</p>
+
+ <div id="gallery" class="gallery">
+
+  <img src="https://admin.southindiatoursandtravels.com/pages/gallery/24742.jpg"
+       alt="Tirupati Temple"
+       data-video="https://youtu.be/lVbjZWsVtJk?si=_2BQajSPHfPJ6bOE">
+
+  <img src="https://instaastro.com/blog/wp-content/uploads/2022/04/feature-image-kashi-vishwanath.jpg"
+       alt="Kashi Vishwanath Temple"
+       data-video="https://www.youtube.com/embed/9QJ2Rk9X3eI">
+
+  <img src="https://praveenmusafir.com/wp-content/uploads/2023/02/somnath-temple-2-picwish-1024x585.jpg"
+       alt="Somnath Temple"
+       data-video="https://www.youtube.com/embed/V2HnO5kYx5M">
+
+  <img src="https://assets.cntraveller.in/photos/60c07fa11393a40ce8d810b0/master/pass/D8R9MT.jpg"
+       alt="Golden Temple"
+       data-video="https://www.youtube.com/embed/5bFzZc6NnR0">
+
+  <img src="https://travelothon.com/wp-content/uploads/2024/03/Ananthapadmanabha-Swamy-Temple-768x432.jpg"
+       alt="Padmanabhaswamy Temple"
+       data-video="https://www.youtube.com/embed/G0v8bK7H4zE">
+
+</div>
+
+  </main>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox" class="lightbox">
+    <button class="lb-close">✕</button>
+    <iframe id="lb-video"
+            allow="autoplay; encrypted-media"
+            allowfullscreen></iframe>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <p>© Sacred Temple</p>
+  </footer>
+
+  <!-- JAVASCRIPT -->
+  <script>
+    const images = document.querySelectorAll("#gallery img");
+    const lightbox = document.getElementById("lightbox");
+    const videoFrame = document.getElementById("lb-video");
+    const closeBtn = document.querySelector(".lb-close");
+
+    images.forEach(img => {
+      img.addEventListener("click", () => {
+        const videoURL = img.getAttribute("data-video");
+        videoFrame.src = videoURL + "?autoplay=1";
+        lightbox.style.display = "flex";
+      });
+    });
+
+    closeBtn.addEventListener("click", () => {
+      videoFrame.src = "";
+      lightbox.style.display = "none";
+    });
+  </script>
+
+</body>
+</html>

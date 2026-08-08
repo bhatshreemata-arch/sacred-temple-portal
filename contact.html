@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Contact — Sacred Temple</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">✦ Sacred Temple</a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="mainNav">☰</button>
+      <nav id="mainNav" class="main-nav">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="visit.html">Visit</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="events.html">Events</a></li>
+          <li><a href="donations.html">Donate</a></li>
+          <li><a href="contact.html" aria-current="page">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Contact Us</h1>
+
+    <form id="contactForm" class="form-card" novalidate>
+      <label for="c_name">Name</label>
+      <input id="c_name" name="name" required />
+
+      <label for="c_email">Email</label>
+      <input id="c_email" name="email" type="email" required />
+
+      <label for="c_message">Message</label>
+      <textarea id="c_message" name="message" rows="5" required></textarea>
+
+      <div class="form-actions">
+        <button type="submit" class="btn">Send Message</button>
+      </div>
+
+      <div id="contactMessage" class="form-message" role="status" aria-live="polite"></div>
+    </form>
+
+    <section class="map">
+      <h2>Location</h2>
+      <p>Embed Google Maps iframe here in production. For demo, see map page.</p>
+      <a class="small-link" href="map.html">Open map & accessibility info</a>
+    </section>
+  </main>
+
+  <footer class="site-footer container">
+    <p>&copy; Sacred Temple</p>
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

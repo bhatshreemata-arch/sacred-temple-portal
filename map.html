@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Temple Map & Details — Sacred Temple</title>
+
+  <!-- Your global styles -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Leaflet CSS (for the custom marker map) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-sA+3mYkQG3bP2tBv4zma2mG6kH0cH2v0vM6tY6bP0h0=" crossorigin=""/>
+
+  <style>
+    /* Page-specific styles (small additions) */
+    .map-wrapper { display: grid; gap:1rem; grid-template-columns: 1fr; }
+    @media(min-width:960px) { .map-wrapper { grid-template-columns: 420px 1fr; align-items:start } }
+
+    .details-card {
+      background: var(--card-bg);
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+    .details-card h2 { margin-top:0; }
+    .lang-switch { display:flex; gap:.5rem; margin-bottom:.6rem; }
+    .lang-switch button { padding:.4rem .6rem; border-radius:6px; border:1px solid #ddd; background:transparent; cursor:pointer; }
+    .slideshow { position:relative; border-radius:10px; overflow:hidden; box-shadow:var(--shadow); background:#111; }
+    .slide { display:none; width:100%; height:220px; object-fit:cover; }
+    .slide.active { display:block; }
+    .sl-prev, .sl-next {
+      position:absolute; top:50%; transform:translateY(-50%);
+      background:rgba(0,0,0,0.5); color:white; border:0; padding:.5rem .7rem; border-radius:6px; cursor:pointer;
+    }
+    .sl-prev { left:10px } .sl-next { right:10px }
+    .sl-caption { position:absolute; left:10px; bottom:10px; background:rgba(0,0,0,0.45); color:white; padding:.4rem .6rem; border-radius:6px; font-size:.95rem }
+    #leafletMap { height:320px; border-radius:10px; overflow:hidden; }
+    .controls-row { display:flex; gap:.6rem; margin-top:.6rem; flex-wrap:wrap }
+    .btn-inline { padding:.5rem .7rem; border-radius:8px; border:1px solid #ddd; background:var(--card-bg); cursor:pointer; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">✦ Sacred Temple</a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="mainNav">☰</button>
+      <nav id="mainNav" class="main-nav">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="map.html" aria-current="page">Map</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container mt-2">
+    <h1>Temple Maps, Details & Accessibility</h1>
+    <p>Choose a temple to view live maps, history, timings, images and directions. Switch language below.</p>
+
+    <div class="map-select-row mt-2" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center">
+      <div style="flex:1;max-width:520px">
+        <label for="templeSelector" class="muted">Select Temple</label>
+        <select id="templeSelector" aria-label="Select temple" style="width:100%;padding:.6rem;border-radius:8px;border:1px solid #ddd">
+          <option value="">— Choose a temple —</option>
+          <option value="tirupati">Tirupati Balaji Temple</option>
+          <option value="kashi">Kashi Vishwanath Temple</option>
+          <option value="somnath">Somnath Temple</option>
+          <option value="golden">Golden Temple (Amritsar)</option>
+          <option value="padmanabha">Padmanabhaswamy Temple</option>
+          <option value="iskcon">ISKCON Temple (Bengaluru)</option>
+        </select>
+      </div>
+
+      <div class="lang-switch" aria-hidden="false" title="Switch language">
+        <button data-lang="en" class="lang-btn" aria-pressed="true">EN</button>
+        <button data-lang="hi" class="lang-btn">HI</button>
+        <button data-lang="kn" class="lang-btn">ಕನ್ನಡ</button>
+      </div>
+    </div>
+
+    <div class="map-wrapper mt-2">
+
+      <!-- LEFT: details + slideshow -->
+      <div>
+        <div class="details-card" id="detailsCard" aria-live="polite">
+          <h2 id="tName">Select a temple</h2>
+
+          <div id="tSub" class="muted">Temple short info will appear here.</div>
+
+          <div class="controls-row mt-2">
+            <button id="directionsBtn" class="btn" disabled>Get Directions</button>
+            <button id="openMapBtn" class="btn" disabled>Open Google Map</button>
+          </div>
+
+          <hr style="margin:.8rem 0">
+
+          <h3 id="secHistoryLabel">History</h3>
+          <p id="tHistory" class="muted small">—</p>
+
+          <h3 id="secTimingsLabel" style="margin-top:.6rem">Timings</h3>
+          <div id="tTimings" class="muted small">
+            <div><strong id="timMorning">Morning:</strong> <span id="timMorningVal">—</span></div>
+            <div><strong id="timEvening">Evening:</strong> <span id="timEveningVal">—</span></div>
+          </div>
+        </div>
+
+        <div class="slideshow mt-2" aria-hidden="false">
+          <img id="slide0" class="slide active" src="https://media.istockphoto.com/id/934815892/photo/hindu-temple-for-lord-balaji-tirupati-andhra-pradesh-india.jpg?s=612x612&w=0&k=20&c=ypw5btTfP36hfO-c4jEzC2QLGiyA5c0u5Kt-zkHlG_w=" alt="Slide 1">
+          <img id="slide1" class="slide" src="https://blogs.revv.co.in/blogs/wp-content/uploads/2020/05/Iskcon-Temple-Bangalore.jpg" alt="Slide 2">
+          <img id="slide2" class="slide" src="https://admin.southindiatoursandtravels.com/pages/gallery/24742.jpg" alt="Slide 3">
+          <button class="sl-prev" aria-label="Previous image">◀</button>
+          <button class="sl-next" aria-label="Next image">▶</button>
+          <div class="sl-caption" id="slCaption">Temple images</div>
+        </div>
+      </div>
+
+      <!-- RIGHT: maps -->
+      <div>
+        <!-- Google Maps iframe (live) -->
+        <iframe id="mapFrame" src="" width="100%" height="320" style="border:0;border-radius:10px;opacity:0;transition:opacity .35s" allowfullscreen="" loading="lazy"></iframe>
+
+        <!-- Leaflet custom map -->
+        <div id="leafletMap" class="mt-2" aria-hidden="false"></div>
+
+        <div id="mapInfo" class="map-info mt-2">Choose a temple to see details and map markers.</div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer container mt-3">
+    <p>&copy; Sacred Temple</p>
+  </footer>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-o9N1j+vQ2fHAb2bY2m8kR5Z4sEAQGQ1M3f9m2hSg+eE=" crossorigin=""></script>
+
+  <script>
+  /*******************************************************
+   * Temple Data (multi-language)
+   * - English (en), Hindi (hi), Kannada (kn)
+   * - For each temple: name, short, history, timings, coords, images (filenames)
+   *******************************************************/
+  const TEMPLE_DATA = {
+    tirupati: {
+      coords: { lat: 13.6839283, lng: 79.3470159 },
+      mapEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3899.510722284395!2d79.34454787491297!3d13.683928286700369!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a4d49c80f1e1cd1%3A0x5bd1c15a69f8f299!2sSri%20Venkateswara%20Swamy%20Vaari%20Temple!5e0!3m2!1sen!2sin!4v1707330000000",
+      images: ["images/gallery1.svg","images/gallery2.svg","images/gallery3.svg"],
+      en: {
+        name: "Tirupati Balaji Temple",
+        short: "Famous hill-temple dedicated to Lord Venkateswara.",
+        history: "Tirupati's Sri Venkateswara Temple is one of the most visited pilgrimage sites, with a rich history spanning centuries. Devotees come from across India for darshan and special sevas.",
+        timings: { morning: "03:00–13:00", evening: "16:00–21:00" }
+      },
+      hi: {
+        name: "तिरुपति बालाजी मंदिर",
+        short: "भगवान वेंकटेश्वर को समर्पित प्रख्यात पहाड़ी मंदिर।",
+        history: "तिरुपति का श्री वेणकटेश्वर मंदिर एक प्राचीन तीर्थस्थल है जहाँ देशभर से श्रद्धालु दर्शन के लिए आते हैं।",
+        timings: { morning: "03:00–13:00", evening: "16:00–21:00" }
+      },
+      kn: {
+        name: "ತಿರುತ್ಪತಿ ಬಾಲಾಜಿ ದೇವಾಲಯ",
+        short: "ದೇವೇಂದ್ರ ವೆಂಕಟೇಶ್ವರರಿಗೆ ಮೀಸಲಾದ ಪ್ರಸಿದ್ಧ ಬೆಟ್ಟದ ದೇವಾಲಯ.",
+        history: "ತಿರುತ್ಪತಿಯ ಶ್ರೀ ವೆಂಕಟೇಶ್ವರ ದೇವಸ್ಥಾನವು ಶತಮಾನಗಳ ಇತಿಹಾಸ ಹೊಂದಿದ್ದು ದೇಶಾದ್ಯಾಂತ ಭಕ್ತರು यहाँ ಬರುತ್ತಾರೆ.",
+        timings: { morning: "03:00–13:00", evening: "16:00–21:00" }
+      }
+    },
+
+    kashi: {
+      coords: { lat: 25.3108824, lng: 83.00394835 },
+      mapEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14230.958091048935!2d83.00394835!3d25.3108824!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x398e2e1833e5b8a5%3A0x69b601a6ce341f39!2sShri%20Kashi%20Vishwanath%20Temple!5e0!3m2!1sen!2sin!4v1707330100000",
+      images: ["images/gallery2.svg","images/gallery1.svg","images/gallery3.svg"],
+      en: {
+        name: "Kashi Vishwanath Temple",
+        short: "Historic temple on the banks of the Ganges in Varanasi.",
+        history: "Kashi Vishwanath is one of the twelve Jyotirlinga shrines and holds immense spiritual significance. The temple has been a major pilgrimage site for centuries.",
+        timings: { morning: "05:30–13:30", evening: "16:00–22:00" }
+      },
+      hi: {
+        name: "काशी विश्वनाथ मंदिर",
+        short: "वाराणसी में गंगा के तट पर ऐतिहासिक मंदिर।",
+        history: "काशी विश्वनाथ बारह ज्योतिर्लिंगों में से एक है और वर्षों से तीर्थयात्रियों का प्रमुख केंद्र रहा है।",
+        timings: { morning: "05:30–13:30", evening: "16:00–22:00" }
+      },
+      kn: {
+        name: "ಕಾಶಿ ವಿಶ್ವನಾಥಾ ದೇವಸ್ಥಾನ",
+        short: "ವರಾಣಸಿ ಹೊರಗಿನ ಗಂಗಾ ತೀರದ ಐತಿಹಾಸಿಕ ದೇವಾಲಯ.",
+        history: "ಕಾಶಿ ವಿಶ್ವನಾಥನು ಪ್ರಾಚೀನ ಜೇಾತಿರ್ಲಿಂಗಗಳಲ್ಲಿ ಒಂದಾಗಿದ್ದು ಶತಮಾನಗಳಿಂದ ಉತ್ಸವ ಕೇಂದ್ರವಾಗಿದೆ.",
+        timings: { morning: "05:30–13:30", evening: "16:00–22:00" }
+      }
+    },
+
+    somnath: {
+      coords: { lat: 20.88752675, lng: 70.38116065 },
+      mapEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d54983.591783102525!2d70.38116064999999!3d20.88752675!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bfd3c00f788f7fd%3A0x1caa602f2d9e8d39!2sSomnath%20Temple!5e0!3m2!1sen!2sin!4v1707330200000",
+      images: ["images/gallery3.svg","images/gallery2.svg","images/gallery1.svg"],
+      en: {
+        name: "Somnath Temple",
+        short: "Ancient and revered sea-side Shiva temple in Gujarat.",
+        history: "Somnath is famed for its long and storied past, repeatedly rebuilt across eras. It is one of the important pilgrimage sites in western India.",
+        timings: { morning: "06:00–12:00", evening: "16:00–21:00" }
+      },
+      hi: {
+        name: "सुमनाथ मंदिर",
+        short: "गुजरात का प्राचीन और प्रतिष्ठित समुद्र-किनारे शिव मंदिर।",
+        history: "सुमनाथ का इतिहास समृद्ध और गहरा है — कई बार पुनर्निर्मित हुआ और आज भी तीर्थस्थल के रूप में प्रतिष्ठित है।",
+        timings: { morning: "06:00–12:00", evening: "16:00–21:00" }
+      },
+      kn: {
+        name: "ಸೋಮನಾಥ ದೇವಾಲಯ",
+        short: "ಗುಜರಾತಿನ ಸಮುದ್ರ ತೀರದ ಪ್ರಾಚೀನ ಶಿವ ದೇವಾಲಯ.",
+        history: "ಸೋಮನಾಥವು ಪುರಾತನ ಇತಿಹಾಸ ಹಾಗೂ ಪುನಃ ನಿರ್ಮಾಣದ ದ್ವಂದ್ವದೊಂದಿಗೆ ಪವಿತ್ರ ಸ್ಥಳವಾಗಿದೆ.",
+        timings: { morning: "06:00–12:00", evening: "16:00–21:00" }
+      }
+    },
+
+    golden: {
+      coords: { lat: 31.6200026433, lng: 74.8764848751 },
+      mapEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3390.1694644728953!2d74.87648487512941!3d31.620002643335993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391964aa2e05b7e7%3A0xdea33a2147885172!2sSri%20Harmandir%20Sahib!5e0!3m2!1sen!2sin!4v1707330300000",
+      images: ["images/gallery2.svg","images/gallery3.svg","images/gallery1.svg"],
+      en: {
+        name: "Golden Temple (Harmandir Sahib)",
+        short: "The holiest Sikh gurdwara located in Amritsar.",
+        history: "Harmandir Sahib, or the Golden Temple, is the central religious place of the Sikhs and is renowned for its golden architecture and the community kitchen (langar).",
+        timings: { morning: "04:00–12:00", evening: "16:00–22:00" }
+      },
+      hi: {
+        name: "गोल्डन टेम्पल (हरमंदिर साहिब)",
+        short: "अमृतसर में स्थित सिखों का पवित्र गुरुद्वारा।",
+        history: "हरमंदिर साहिब अपने सुवर्ण वास्तुशिल्प और लंगर के लिए विश्वप्रसिद्ध है।",
+        timings: { morning: "04:00–12:00", evening: "16:00–22:00" }
+      },
+      kn: {
+        name: "ಗೋಲ್ಡನ್ ದೇವಾಲಯ (ಹರ್ಮಂದಿರ್ ಸಹಿಬ್)",
+        short: "ಅಮೃತಸರದಲ್ಲಿ ನೆಲೆಯಿರುವ ಪ್ರಮುಖ ಸಿಖ್ ಗರ್ಭಗುಡಿ.",
+        history: "ಹರ್ಮಂದಿರ್ ಸಹಿಬ್ ತನ್ನ ಚಿನ್ನದ ವಿನ್ಯಾಸ ಮತ್ತು ಲಂಗರ್ ವ್ಯವಸ್ಥೆಗೆ ಪ್ರಸಿದ್ಧವಾಗಿದೆ.",
+        timings: { morning: "04:00–12:00", evening: "16:00–22:00" }
+      }
+    },
+
+    padmanabha: {
+      coords: { lat: 8.482681, lng: 76.943475 },
+      mapEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d62845.794048531364!2d76.90505738046874!3d8.484681320513174!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b05bbd7e723fca5%3A0x5888abfdfdb14f0e!2sSree%20Padmanabhaswamy%20Temple!5e0!3m2!1sen!2sin!4v1707330400000",
+      images: ["images/gallery3.svg","images/gallery1.svg","images/gallery2.svg"],
+      en: {
+        name: "Padmanabhaswamy Temple",
+        short: "Ancient Vishnu temple in Thiruvananthapuram.",
+        history: "Sree Padmanabhaswamy Temple is famed for its Dravidian architecture and historical significance. It remains a vital place of worship in Kerala.",
+        timings: { morning: "03:00–12:00", evening: "16:00–19:00" }
+      },
+      hi: {
+        name: "पद्मनाभस्वामी मंदिर",
+        short: "तिरुवनंतपुरम का प्राचीन विष्णु मंदिर।",
+        history: "यह मंदिर अपनी वास्तुकला और ऐतिहासिक महत्व के लिए प्रसिद्ध है और केरल के प्रमुख तीर्थस्थलों में से एक है।",
+        timings: { morning: "03:00–12:00", evening: "16:00–19:00" }
+      },
+      kn: {
+        name: "ಪಟ್ಟ್ಮನಾಭಸ್ವಾಮಿ ದೇವಾಲಯ",
+        short: "ತಿರುವನಂತಪುರದ ಪ್ರಾಚೀನ ವಿಷ್ಣು ದೇವಾಲಯ.",
+        history: "ಶ್ರೀ ಪಟ್ಟ್ಮನಾಭಸ್ವಾಮಿ ದೇವಸ್ಥಾನವು ದ್ರಾವಿಡ ಶೈಲಿಯ ವಿನ್ಯಾಸ ಮತ್ತು ಐತಿಹಾಸಿಕ ಮಹತ್ವಕ್ಕೆ ಪ್ರಸಿದ್ಧವಾಗಿದೆ.",
+        timings: { morning: "03:00–12:00", evening: "16:00–19:00" }
+      }
+    },
+
+    iskcon: {
+      coords: { lat: 13.0100, lng: 77.5609 },
+      mapEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.071868871855!2d77.56090657501647!3d13.009997715457795!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae17c201e5088b%3A0xdcad1cc73cf17ac2!2sISKCON%20Temple%20Bengaluru!5e0!3m2!1sen!2sin!4v1707330500000",
+      images: ["images/gallery1.svg","images/gallery2.svg","images/gallery3.svg"],
+      en: {
+        name: "ISKCON Temple (Bengaluru)",
+        short: "A modern temple known for devotional programs and cultural events.",
+        history: "ISKCON temples are centres for devotional practice and community outreach, hosting kirtans, classes and festivals.",
+        timings: { morning: "06:00–12:00", evening: "16:00–20:00" }
+      },
+      hi: {
+        name: "ISKCON मंदिर (बेंगलुरु)",
+        short: "भक्ति कार्यक्रमों और सांस्कृतिक गतिविधियों के लिए जाना जाता है।",
+        history: "ISKCON धार्मिक अभ्यास और समुदाय सेवा का केंद्र है जहाँ कीर्तन और कार्यक्रम होते हैं।",
+        timings: { morning: "06:00–12:00", evening: "16:00–20:00" }
+      },
+      kn: {
+        name: "ISKCON ದೇವಾಲಯ (ಬೆಂಗಳೂರಿನ)",
+        short: "ಭಕ್ತಿಯ ಕಾರ್ಯಕ್ರಮಗಳು ಮತ್ತು ಸಾಂಸ್ಕೃತಿಕ ಕಾರ್ಯಕ್ರಮಗಳಿಂದ ಖ್ಯಾತಿ ಹೊಂದಿದೆ.",
+        history: "ISKCON ದೇವಾಲಯಗಳು ಭಕ್ತಿಪಾಠ ಮತ್ತು ಸಮಾಜ ಸೇವೆಗಾಗಿ ಗುರುತಿಸಿಕೊಂಡಿವೆ.",
+        timings: { morning: "06:00–12:00", evening: "16:00–20:00" }
+      }
+    }
+  };
+
+  /*******************************************************
+   * Utilities & state
+   *******************************************************/
+  const selector = document.getElementById('templeSelector');
+  const langButtons = Array.from(document.querySelectorAll('.lang-btn'));
+  const details = {
+    name: document.getElementById('tName'),
+    sub: document.getElementById('tSub'),
+    history: document.getElementById('tHistory'),
+    timMorningVal: document.getElementById('timMorningVal'),
+    timEveningVal: document.getElementById('timEveningVal'),
+    slCaption: document.getElementById('slCaption'),
+    directionsBtn: document.getElementById('directionsBtn'),
+    openMapBtn: document.getElementById('openMapBtn'),
+    mapInfo: document.getElementById('mapInfo'),
+    secHistoryLabel: document.getElementById('secHistoryLabel'),
+    secTimingsLabel: document.getElementById('secTimingsLabel')
+  };
+
+  let currentTempleKey = localStorage.getItem('selectedTemple') || '';
+  let currentLang = localStorage.getItem('selectedLang') || 'en';
+  let currentSlideIndex = 0;
+  let slideTimer = null;
+
+  // Leaflet map instance
+  let leafletMap = null;
+  let leafletMarker = null;
+
+  /*******************************************************
+   * Initialize page state
+   *******************************************************/
+  // set selector initial
+  if (currentTempleKey) {
+    selector.value = currentTempleKey;
+  }
+
+  // set language button visual
+  function setLangButtonVisual() {
+    langButtons.forEach(btn => {
+      const l = btn.dataset.lang;
+      btn.setAttribute('aria-pressed', String(l === currentLang));
+      btn.style.fontWeight = l === currentLang ? '700' : '400';
+    });
+  }
+  setLangButtonVisual();
+
+  // Language switching
+  langButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentLang = btn.dataset.lang;
+      localStorage.setItem('selectedLang', currentLang);
+      setLangButtonVisual();
+      if (selector.value) updateTempleUI(selector.value);
+    });
+  });
+
+  /*******************************************************
+   * Slideshow functions
+   *******************************************************/
+  const slides = [document.getElementById('slide0'), document.getElementById('slide1'), document.getElementById('slide2')];
+  const prevBtn = document.querySelector('.sl-prev');
+  const nextBtn = document.querySelector('.sl-next');
+
+  function showSlide(idx) {
+    slides.forEach((s,i)=> s.classList.toggle('active', i===idx));
+    currentSlideIndex = idx;
+  }
+  function nextSlide() { showSlide((currentSlideIndex+1) % slides.length); }
+  function prevSlide() { showSlide((currentSlideIndex-1 + slides.length) % slides.length); }
+  prevBtn.addEventListener('click', ()=> { prevSlide(); resetSlideTimer(); });
+  nextBtn.addEventListener('click', ()=> { nextSlide(); resetSlideTimer(); });
+
+  function startSlideTimer() {
+    stopSlideTimer();
+    slideTimer = setInterval(nextSlide, 3500);
+  }
+  function stopSlideTimer() { if (slideTimer) { clearInterval(slideTimer); slideTimer = null; } }
+  function resetSlideTimer() { startSlideTimer(); }
+
+  // start initially
+  startSlideTimer();
+
+  /*******************************************************
+   * Leaflet map init
+   *******************************************************/
+  function initLeaflet() {
+    if (leafletMap) return;
+    leafletMap = L.map('leafletMap', { attributionControl: false }).setView([20.0, 78.0], 5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+    }).addTo(leafletMap);
+  }
+  initLeaflet();
+
+  /*******************************************************
+   * Update UI for selected temple
+   *******************************************************/
+  function updateTempleUI(key) {
+    if (!key || !TEMPLE_DATA[key]) {
+      // clear
+      details.name.textContent = 'Select a temple';
+      details.sub.textContent = 'Temple short info will appear here.';
+      details.history.textContent = '—';
+      details.timMorningVal.textContent = '—';
+      details.timEveningVal.textContent = '—';
+      details.directionsBtn.disabled = true;
+      details.openMapBtn.disabled = true;
+      document.getElementById('mapFrame').style.opacity = 0;
+      details.mapInfo.textContent = 'Choose a temple to see details and map markers.';
+      return;
+    }
+
+    const t = TEMPLE_DATA[key];
+    const block = t[currentLang] || t['en'];
+
+    // update textual details
+    details.name.textContent = block.name;
+    details.sub.textContent = block.short;
+    details.history.textContent = block.history;
+    details.timMorningVal.textContent = block.timings?.morning || '—';
+    details.timEveningVal.textContent = block.timings?.evening || '—';
+
+    // update labels (language-specific)
+    const labels = {
+      en: { history:'History', timings:'Timings', directions:'Get Directions', openmap:'Open Google Map', images:'Temple images' },
+      hi: { history:'इतिहास', timings:'समय', directions:'दिशा पाएं', openmap:'गूगल मैप खोलें', images:'मंदिर की तस्वीरें' },
+      kn: { history:'ಇತಿಹಾಸ', timings:'ಸಮಯಗಳು', directions:'ದಿಕ್ಕುಗಳನ್ನು ಪಡೆಯಿ', openmap:'ಗೂಗಲ್ ನಕ್ಷೆ ತೆರೆಯಿ', images:'ದೇಸ್ಯದ ಚಿತ್ರಗಳು' }
+    };
+    const lbl = labels[currentLang] || labels.en;
+    document.getElementById('secHistoryLabel').textContent = lbl.history;
+    document.getElementById('secTimingsLabel').textContent = lbl.timings;
+    details.directionsBtn.textContent = lbl.directions;
+    details.openMapBtn.textContent = lbl.openmap;
+    details.slCaption.textContent = lbl.images;
+
+    // update slideshow images (3 placeholders here; replace with real URLs if available)
+    const imgs = t.images || ["images/gallery1.svg","images/gallery2.svg","images/gallery3.svg"];
+    slides.forEach((s,i) => {
+      if (imgs[i]) {
+        s.src = imgs[i];
+        s.alt = `${block.name} image ${i+1}`;
+      }
+    });
+    showSlide(0);
+    startSlideTimer();
+
+    // update google iframe with fade
+    const iframe = document.getElementById('mapFrame');
+    iframe.style.opacity = 0;
+    setTimeout(()=> {
+      iframe.src = t.mapEmbed;
+      iframe.style.opacity = 1;
+    }, 250);
+
+    // update Leaflet marker
+    if (leafletMap) {
+      const c = t.coords;
+      leafletMap.setView([c.lat, c.lng], 13, { animate:true });
+      if (leafletMarker) { leafletMarker.setLatLng([c.lat,c.lng]); }
+      else {
+        const customIcon = L.icon({
+          iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+          iconSize: [25, 41],
+          iconAnchor: [12, 41],
+        });
+        leafletMarker = L.marker([c.lat, c.lng], { icon: customIcon }).addTo(leafletMap);
+      }
+      leafletMarker.bindPopup(`<strong>${block.name}</strong>`).openPopup();
+    }
+
+    // enable directions & openMap buttons
+    details.directionsBtn.disabled = false;
+    details.openMapBtn.disabled = false;
+
+    // store preference
+    localStorage.setItem('selectedTemple', key);
+
+    // update mapInfo text
+    details.mapInfo.textContent = `Showing: ${block.name} (${t.coords.lat.toFixed(4)}, ${t.coords.lng.toFixed(4)})`;
+  }
+
+  // handle selector change
+  selector.addEventListener('change', (e)=> {
+    currentTempleKey = e.target.value;
+    updateTempleUI(currentTempleKey);
+  });
+
+  // directions button opens Google Maps directions (works on mobile apps too)
+  details.directionsBtn.addEventListener('click', ()=> {
+    if (!currentTempleKey) return;
+    const c = TEMPLE_DATA[currentTempleKey].coords;
+    // url that works across platforms
+    const gUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(c.lat + ',' + c.lng)}`;
+    window.open(gUrl, '_blank');
+  });
+
+  // open map in new tab
+  details.openMapBtn.addEventListener('click', ()=> {
+    if (!currentTempleKey) return;
+    const embed = TEMPLE_DATA[currentTempleKey].mapEmbed;
+    // extract the place URL by building a simple maps URL with coords
+    const c = TEMPLE_DATA[currentTempleKey].coords;
+    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.lat + ',' + c.lng)}`;
+    window.open(mapsUrl, '_blank');
+  });
+
+  // load saved initial selection
+  if (selector.value) {
+    updateTempleUI(selector.value);
+  } else if (currentTempleKey) {
+    selector.value = currentTempleKey;
+    updateTempleUI(currentTempleKey);
+  }
+
+  // pause slideshow on hover
+  document.querySelector('.slideshow').addEventListener('mouseenter', stopSlideTimer);
+  document.querySelector('.slideshow').addEventListener('mouseleave', startSlideTimer);
+
+  // expose a small helper for debugging (optional)
+  window.__tm = { updateTempleUI, TEMPLE_DATA };
+  </script>
+
+  <!-- Optionally include your global scripts.js at the end -->
+  <script src="scripts.js"></script>
+</body>
+</html>

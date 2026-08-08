@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#eef7ff"/>
+  <g transform="translate(80,80)">
+    <rect x="0" y="0" width="1040" height="640" rx="16" fill="#f0fbff" stroke="#9cc9e0"/>
+    <text x="520" y="320" font-size="46" text-anchor="middle" fill="#226a8a" font-family="sans-serif">Gallery Image 2</text>
+  </g>
+</svg>
